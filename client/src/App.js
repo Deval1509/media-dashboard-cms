@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import MediaList from './components.js/MediaList.js';
+import Login from './components.js/Login.js';
+import './App.css'
 
 function App() {
+  // State to track whether the user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Function to handle login (called when login is successful)
+  const handleLogin = (status) => {
+    setIsLoggedIn(status); // Update the login state
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Media Content Management Dashboard</h1>
+      {/* If logged in, show the media list, otherwise show the login screen */}
+      {isLoggedIn ? (
+        <MediaList />
+      ) : (
+        <Login onLogin={handleLogin} />
+      )}
     </div>
   );
 }
