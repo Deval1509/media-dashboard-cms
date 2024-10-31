@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import MediaList from './components.js/MediaList.js';
-import Login from './components.js/Login.js';
+import MediaList from './components/MediaList/MediaList.js';
+import Login from './components/Login/Login.js';
 import './App.css'
 
 function App() {

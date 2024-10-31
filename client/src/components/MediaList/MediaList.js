@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../components-css/MediaList.css';
+import './MediaList.css';
 
 const MediaList = () => {
   // State to hold media items and filter values
