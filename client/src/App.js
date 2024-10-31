@@ -1,27 +1,64 @@
 import React, { useState } from 'react';
-import MediaList from './components/MediaList/MediaList.js';
-import Login from './components/Login/Login.js';
-import './App.css'
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import MediaList from './components/MediaList/MediaList';
+import Login from './components/Login/Login';
+import Signup from './components/Signup/Signup';
+import ContentForm from './components/ContentForm/ContentForm';
+import './App.css';
 
 function App() {
-  // State to track whether the user is logged in
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
 
-  // Function to handle login (called when login is successful)
   const handleLogin = (status) => {
-    setIsLoggedIn(status); // Update the login state
+    setIsLoggedIn(status);
+  };
+
+  const toggleSignup = () => {
+    setShowSignup(!showSignup);
   };
 
   return (
-    <div className="App">
-      <h1>Media Content Management Dashboard</h1>
-      {/* If logged in, show the media list, otherwise show the login screen */}
-      {isLoggedIn ? (
-        <MediaList />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </div>
+    <Router>
+      <div className="App">
+        <h1>Media Content Management Dashboard</h1>
+        {isLoggedIn ? (
+          <>
+            <nav className="nav-bar">
+              <Link to="/" className="nav-link">Home</Link>
+              <span className="nav-separator">|</span>
+              <Link to="/add-content" className="nav-link">Add Content</Link>
+            </nav>
+            <Routes>
+              <Route path="/" element={<MediaList isAdmin={true} />} />
+              <Route path="/add-content" element={<ContentForm />} />
+            </Routes>
+          </>
+        ) : (
+          showSignup ? (
+            <>
+              <Signup />
+              <p>
+                Already have an account?{' '}
+                <button onClick={toggleSignup} className="link-button">
+                  Go to Login
+                </button>
+              </p>
+            </>
+          ) : (
+            <>
+              <Login onLogin={handleLogin} />
+              <p>
+                Don't have an account?{' '}
+                <button onClick={toggleSignup} className="link-button">
+                  Sign Up
+                </button>
+              </p>
+            </>
+          )
+        )}
+      </div>
+    </Router>
   );
 }
 

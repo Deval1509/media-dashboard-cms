@@ -1,28 +1,32 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
-  // State to track the username, password, and any login error messages
+  // State variables for username, password, and error message
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  // Handle form submission for login
+  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Simple hardcoded validation for demonstration purposes
-    if (username === 'admin' && password === 'password') {
-      onLogin(true);  // Call the onLogin function with 'true' to indicate success
-    } else {
-      setError('Invalid username or password');  // Set an error message if login fails
-    }
+    // Make a POST request to the backend for login authentication
+    axios.post('http://localhost:5000/api/login', { username, password })
+      .then(response => {
+        console.log(response.data.message);
+        localStorage.setItem('token', response.data.token);
+        onLogin(true);
+      })
+      .catch(error => {
+        setError('Invalid username or password');
+        console.error('Error logging in:', error);
+      });
   };
 
   return (
     <div className="login-container">
       <h2>Login</h2>
-      {/* Display error message if login fails */}
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
@@ -30,7 +34,7 @@ const Login = ({ onLogin }) => {
           <input
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}  // Update username state
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div>
@@ -38,7 +42,7 @@ const Login = ({ onLogin }) => {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}  // Update password state
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button type="submit">Login</button>

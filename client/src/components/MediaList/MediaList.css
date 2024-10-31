@@ -88,6 +88,32 @@
   .read-more:hover {
     text-decoration: underline;
   }
+
+  .media-card {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .delete-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+  }
+  
+  .delete-button:hover {
+    background-color: #e60000;
+  }
+  
   
   /* Media Queries */
   

@@ -3,27 +3,45 @@ import axios from 'axios';
 import './MediaList.css';
 
 const MediaList = () => {
-  // State to hold media items and filter values
   const [mediaItems, setMediaItems] = useState([]);
+  
+  // State to manage filter type and filter value for filtering media items
   const [filterType, setFilterType] = useState('');
   const [filterValue, setFilterValue] = useState('');
+
+  // Check if the logged-in user is an admin using local storage
+  const isAdmin = localStorage.getItem('username') === 'admin';
+
+  // Function to handle deletion of a media item(admin controlled)
+  const handleDelete = (id) => {
+    if (!isAdmin) return; 
+
+    // Send DELETE request to the backend to remove the item
+    axios.delete(`http://localhost:5000/api/content/${id}`)
+      .then(response => {
+        console.log(response.data.message);
+        // Update the media items state to remove  deleted item
+        setMediaItems(mediaItems.filter(item => item.id !== id));
+      })
+      .catch(error => console.error('Error deleting content:', error));
+  };
 
   // Fetch media items from the backend when the component mounts
   useEffect(() => {
     axios.get('http://localhost:5000/api/media')
       .then(response => setMediaItems(response.data))
-      .catch(error => console.error('Error fetching media items:', error));
+      .catch(error => console.error('Error fetching media items:', error)); 
   }, []);
 
-  // Filter media items based on selected filter type and value
+  // Function to filter media items based on the selected filter type and value
   const filteredItems = mediaItems.filter(item => {
-    if (!filterValue) return true; // If no filter is selected, return all items
+    if (!filterValue) return true; 
     if (filterType === 'status') return item.status.toLowerCase() === filterValue.toLowerCase();
     if (filterType === 'genre') return item.genre.toLowerCase() === filterValue.toLowerCase();
     return true;
   });
 
-  // Options for the second dropdown based on selected filter type
+  // Generate filter options based on the selected filter type
   const filterOptions = filterType === 'status'
     ? ['Published', 'Draft']
     : filterType === 'genre'
@@ -33,10 +51,10 @@ const MediaList = () => {
   return (
     <div className="media-list-container">
       <h2>Media Content List</h2>
-
+      
       {/* Filter section */}
       <div className="filter-container-wrapper">
-        {/* First dropdown: Filter by status or genre */}
+        {/* Dropdown to select filter type */}
         <div className="filter-container">
           <label htmlFor="filter-type">Filter by: </label>
           <select
@@ -44,7 +62,7 @@ const MediaList = () => {
             value={filterType}
             onChange={(e) => {
               setFilterType(e.target.value);
-              setFilterValue(''); // Reset filter value when changing filter type
+              setFilterValue('');
             }}
             className="filter-select"
           >
@@ -54,7 +72,7 @@ const MediaList = () => {
           </select>
         </div>
 
-        {/* Second dropdown: Select specific filter value based on filter type */}
+        {/* Dropdown to select filter value based on filter type */}
         {filterType && (
           <div className="filter-container">
             <label htmlFor="filter-value">Select {filterType}: </label>
@@ -80,8 +98,14 @@ const MediaList = () => {
         {filteredItems.length === 0 ? (
           <p>No media items found.</p>
         ) : (
+          // Render each media item as a MediaCard component
           filteredItems.map(item => (
-            <MediaCard key={item.id} item={item} />
+            <MediaCard
+              key={item.id}
+              item={item}
+              isAdmin={isAdmin}
+              onDelete={handleDelete}
+            />
           ))
         )}
       </div>
@@ -90,14 +114,15 @@ const MediaList = () => {
 };
 
 // Component to display individual media item
-const MediaCard = ({ item }) => {
+const MediaCard = ({ item, isAdmin, onDelete }) => {
   const [isReadMore, setIsReadMore] = useState(false);
 
+  // Function to toggle the read more/less state
   const toggleReadMore = () => {
-    setIsReadMore(!isReadMore); // Toggle read more/less state
+    setIsReadMore(!isReadMore);
   };
 
-  // Show truncated description if it's too long
+  // Truncate the description if it exceeds 100 characters
   const truncatedDescription = item.description.length > 100
     ? `${item.description.substring(0, 100)}...`
     : item.description;
@@ -113,6 +138,14 @@ const MediaCard = ({ item }) => {
           </span>
         )}
       </p>
+      {isAdmin && (
+        <button
+          onClick={() => onDelete(item.id)}
+          className="delete-button"
+        >
+          Delete
+        </button>
+      )}
     </div>
   );
 };

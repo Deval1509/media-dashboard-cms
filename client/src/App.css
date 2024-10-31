@@ -6,10 +6,61 @@
 }
 
 h1 {
-  font-size: 2.5rem; /* Default size for larger screens */
+  font-size: 2.5rem;
   margin-top: 5%;
   color: #333;
 }
+
+/* Styling for the navigation bar */
+.nav-bar {
+  width: 60%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #007BFF;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Styling for navigation links */
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  flex: 1;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #ffcc00;
+}
+
+/* Styling for the separator between links */
+.nav-separator {
+  color: white;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+/* Link button styling for toggling between login and signup */
+.link-button {
+  background: none;
+  border: none;
+  color: #007BFF;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+  padding: 0;
+}
+
+.link-button:hover {
+  color: #0056b3;
+}
+
+
 
 /* Media Queries for Different Screen Sizes */
 
