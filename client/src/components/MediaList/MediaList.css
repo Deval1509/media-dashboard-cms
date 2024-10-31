@@ -1,0 +1,116 @@
+/* General container for the entire media list */
+.media-list-container {
+    margin: 5%;
+  }
+  
+  /* Subheading: 'Media Content List' */
+  h2 {
+    color: #333;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Wrapper for the filter container, aligned to the right */
+  .filter-container-wrapper {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  /* Flexbox for filter dropdowns */
+  .filter-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  /* Label for filter dropdowns */
+  .filter-container label {
+    margin-right: 10px;
+    font-weight: 500;
+  }
+  
+  /* Style for the filter dropdowns */
+  .filter-select {
+    padding: 10px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-right: 20px;
+  }
+  
+  /* Grid container for the media cards */
+  .media-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  /* Individual media card styling */
+  .media-card {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1% 5% rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+    height: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .media-card strong {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  
+  .media-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+  
+  .read-more {
+    color: #007BFF;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 5px;
+  }
+  
+  .read-more:hover {
+    text-decoration: underline;
+  }
+  
+  /* Media Queries */
+  
+  /* For tablets and smaller screens (max-width 768px) */
+  @media (max-width: 768px) {
+    .filter-container-wrapper {
+      justify-content: center;
+    }
+  }
+  
+  /* For phones (max-width 480px) */
+  @media (max-width: 480px) {
+    h1, h2 {
+      font-size: 1.5em;
+    }
+  
+    .media-card {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  
+    .filter-container-wrapper {
+      justify-content: center;
+    }
+  }
+  
