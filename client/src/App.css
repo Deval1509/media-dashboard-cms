@@ -1,5 +1,29 @@
-/* App.css */
+/* Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+html, body {
+  height: 100%;
+  overflow-x: hidden; /* Remove horizontal scroll */
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  overflow-y: auto; /* Enable vertical scroll only if needed */
+}
+
+#root {
+  min-height: 100vh; /* Make sure the root container takes the full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* App.css */
 .App {
   text-align: center;
   padding: 5%;
@@ -60,8 +84,6 @@ h1 {
   color: #0056b3;
 }
 
-
-
 /* Media Queries for Different Screen Sizes */
 
 /* For tablets (max-width: 768px) */
@@ -69,11 +91,24 @@ h1 {
   h1 {
     font-size: 2rem; /* Smaller on tablets */
   }
+
+  .nav-bar {
+    width: 80%; /* Adjust nav bar width on tablets */
+  }
 }
 
 /* For mobile phones (max-width: 480px) */
 @media (max-width: 480px) {
   h1 {
     font-size: 1.5rem; /* Even smaller on mobile phones */
+  }
+
+  .nav-bar {
+    flex-direction: column; /* Stack nav items vertically on mobile */
+    width: 100%; /* Full width on mobile */
+  }
+
+  .nav-link {
+    padding: 10px 0; /* Add padding for better touch targets */
   }
 }

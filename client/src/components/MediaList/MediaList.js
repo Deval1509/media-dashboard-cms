@@ -1,47 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 import './MediaList.css';
 
 const MediaList = () => {
   const [mediaItems, setMediaItems] = useState([]);
-  
-  // State to manage filter type and filter value for filtering media items
   const [filterType, setFilterType] = useState('');
   const [filterValue, setFilterValue] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Check if the logged-in user is an admin using local storage
-  const isAdmin = localStorage.getItem('username') === 'admin';
+  // Check admin access using token
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        if (decodedToken.username === 'admin') {
+          setIsAdmin(true);
+        }
+      } catch (error) {
+        console.error('Invalid token:', error);
+      }
+    }
+  }, []);
 
-  // Function to handle deletion of a media item(admin controlled)
+  // Function to handle deletion of a media item
   const handleDelete = (id) => {
-    if (!isAdmin) return; 
+    if (!isAdmin) return;
 
-    // Send DELETE request to the backend to remove the item
     axios.delete(`http://localhost:5000/api/content/${id}`)
       .then(response => {
         console.log(response.data.message);
-        // Update the media items state to remove  deleted item
         setMediaItems(mediaItems.filter(item => item.id !== id));
       })
       .catch(error => console.error('Error deleting content:', error));
   };
 
-  // Fetch media items from the backend when the component mounts
+  // Fetch media items from the backend
   useEffect(() => {
     axios.get('http://localhost:5000/api/media')
       .then(response => setMediaItems(response.data))
-      .catch(error => console.error('Error fetching media items:', error)); 
+      .catch(error => console.error('Error fetching media items:', error));
   }, []);
 
-  // Function to filter media items based on the selected filter type and value
+  // Filter media items based on selected filter type and value
   const filteredItems = mediaItems.filter(item => {
-    if (!filterValue) return true; 
+    if (!filterValue) return true;
     if (filterType === 'status') return item.status.toLowerCase() === filterValue.toLowerCase();
     if (filterType === 'genre') return item.genre.toLowerCase() === filterValue.toLowerCase();
     return true;
   });
 
-  // Generate filter options based on the selected filter type
+  // Generate filter options
   const filterOptions = filterType === 'status'
     ? ['Published', 'Draft']
     : filterType === 'genre'
@@ -51,10 +61,9 @@ const MediaList = () => {
   return (
     <div className="media-list-container">
       <h2>Media Content List</h2>
-      
+
       {/* Filter section */}
       <div className="filter-container-wrapper">
-        {/* Dropdown to select filter type */}
         <div className="filter-container">
           <label htmlFor="filter-type">Filter by: </label>
           <select
@@ -72,7 +81,6 @@ const MediaList = () => {
           </select>
         </div>
 
-        {/* Dropdown to select filter value based on filter type */}
         {filterType && (
           <div className="filter-container">
             <label htmlFor="filter-value">Select {filterType}: </label>
@@ -98,7 +106,6 @@ const MediaList = () => {
         {filteredItems.length === 0 ? (
           <p>No media items found.</p>
         ) : (
-          // Render each media item as a MediaCard component
           filteredItems.map(item => (
             <MediaCard
               key={item.id}
@@ -117,37 +124,49 @@ const MediaList = () => {
 const MediaCard = ({ item, isAdmin, onDelete }) => {
   const [isReadMore, setIsReadMore] = useState(false);
 
-  // Function to toggle the read more/less state
+  // Toggle read more/less
   const toggleReadMore = () => {
     setIsReadMore(!isReadMore);
   };
 
-  // Truncate the description if it exceeds 100 characters
-  const truncatedDescription = item.description.length > 100
-    ? `${item.description.substring(0, 100)}...`
-    : item.description;
+  // Default values to handle undefined properties
+  const title = item.title || 'Untitled';
+  const description = item.description || 'No description available';
+  const genre = item.genre || 'Unknown Genre';
+  const status = item.status || 'Unknown Status';
+  const thumbnail = item.thumbnail || 'placeholder-image-url.jpg';
 
-  return (
-    <div className="media-card">
-      <strong>{item.title}</strong> - {item.genre} ({item.status})
-      <p>
-        {isReadMore ? item.description : truncatedDescription}
-        {item.description.length > 100 && (
-          <span onClick={toggleReadMore} className="read-more">
-            {isReadMore ? ' Show less' : ' Read more'}
-          </span>
-        )}
-      </p>
-      {isAdmin && (
-        <button
-          onClick={() => onDelete(item.id)}
-          className="delete-button"
-        >
-          Delete
-        </button>
-      )}
-    </div>
-  );
-};
+  // Truncate the description
+  const truncatedDescription = description.length > 100
+    ? `${description.substring(0, 100)}...`
+    : description;
+
+    return (
+      <div
+      className="media-card"
+      style={{
+        backgroundImage: `url(${thumbnail})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>      
+        <div className="content-overlay">
+          <strong>{title}</strong> - {genre} ({status})
+          <p>
+            {isReadMore ? description : truncatedDescription}
+            {description.length > 100 && (
+              <span onClick={toggleReadMore} className="read-more">
+                {isReadMore ? ' Show less' : ' Read more'}
+              </span>
+            )}
+          </p>
+          {isAdmin && (
+            <button onClick={() => onDelete(item.id)} className="delete-button">
+              Delete
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
 export default MediaList;

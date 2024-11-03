@@ -11,7 +11,7 @@ const ContentForm = () => {
   const [uploadDate, setUploadDate] = useState(new Date());
   const [status, setStatus] = useState('Draft');
   const [errors, setErrors] = useState({});
-  const [showSuccess, setShowSuccess] = useState(false); // State for success message
+  const [showSuccess, setShowSuccess] = useState(false); // Added success message state
 
   // Validation function
   const validate = () => {
@@ -29,6 +29,7 @@ const ContentForm = () => {
     e.preventDefault();
     if (!validate()) return;
 
+    // Prepare content data
     const contentData = {
       title,
       description,
@@ -39,19 +40,18 @@ const ContentForm = () => {
 
     // Make API call to save content data
     axios
-      .post('http://localhost:5000/api/content', contentData) // Replace with your API URL
+      .post('http://localhost:5000/api/content', contentData)
       .then((response) => {
         console.log('Content saved successfully:', response.data);
-        setShowSuccess(true); // Show success message
-
         // Reset form fields after successful submission
         setTitle('');
         setDescription('');
         setGenre('');
         setUploadDate(new Date());
         setStatus('Draft');
+        setShowSuccess(true); // Show success message
 
-        // Hide the success message after 3 seconds
+        // Hide success message after 3 seconds
         setTimeout(() => setShowSuccess(false), 3000);
       })
       .catch((error) => {

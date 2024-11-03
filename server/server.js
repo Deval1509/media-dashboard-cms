@@ -3,6 +3,8 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const app = express();
+const multer = require('multer');
+const path = require('path');
 
 app.use(cors());
 app.use(express.json());
@@ -12,22 +14,6 @@ const SECRET_KEY = 'your-secret-key';
 // Temporary memory storage for users
 let users = [];
 
-// Signup route
-app.post('/api/signup', async (req, res) => {
-  const { username, password } = req.body;
-  
-  // Check if username already exists
-  const existingUser = users.find(user => user.username === username);
-  if (existingUser) {
-    return res.status(409).json({ message: 'Username already exists' });
-  }
-
-  // Hash the password for security
-  const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ username, password: hashedPassword });
-  
-  res.status(201).json({ message: 'User registered successfully' });
-});
 let mediaItems = [
   { id: 1, title: 'Show 1', description: 'An intense and emotional journey following the lives of individuals entangled in a web of secrets, betrayal, and redemption.', genre: 'Drama', status: 'Published', uploadDate: '2024-01-01' },
   { id: 2, title: 'Show 2', description: 'A hilarious sitcom that brings together an eccentric group of friends who navigate life absurdities with wit, sarcasm.', genre: 'Comedy', status: 'Draft', uploadDate: '2024-02-01' },
