@@ -1,8 +1,3 @@
-//
-*
-*
-*
-//
 
 Project Overview :
 The Media Content Management Dashboard is a simplified content management system (CMS) built with React.js and Node.js. It allows users to manage media content (shows, videos, articles, etc.) with basic CRUD functionality—Create, Read, Update, and Delete. 
